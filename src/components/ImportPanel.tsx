@@ -200,8 +200,8 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
       <button
         className={`px-6 py-2 rounded-md transition-colors flex items-center ${
           fileState.isUploaded
-            ? 'bg-green-600 hover:bg-green-700 text-white'
-            : 'bg-blue-600 hover:bg-blue-700 text-white'
+            ? 'bg-green-600 hover:bg-black text-white'
+            : 'bg-green-600 hover:bg-black text-white'
         }`}
         onClick={(e) => {
           e.stopPropagation();
@@ -216,15 +216,7 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">
-          Sistema de Gestão de Entrega
-        </h2>
-        <p className="text-gray-600 text-lg">
-          Faça o upload dos arquivos VUUPT e TMS para começar o monitoramento
-        </p>
-      </div>
-
+     
       {showSecondFilePrompt ? (
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full animate-fadeIn">
           <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
