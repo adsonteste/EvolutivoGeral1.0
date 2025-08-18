@@ -76,9 +76,14 @@ function processTMSData(rawData: ImportedRow[]): DeliveryData[] {
   
   dataRows.forEach(row => {
     const idCarga = row.A?.toString()?.trim();
-    const motorista = row.F?.toString()?.trim();
+    let motorista = row.F?.toString()?.trim();
     const quantidadeVolumes = parseInt(row.P?.toString() || '0');
     const usuarioCarregamento = row.Q?.toString()?.trim() || '';
+    
+    // Se o motorista estiver vazio, usa o ID da carga
+    if (!motorista || motorista === '') {
+      motorista = idCarga || 'ID não identificado';
+    }
     
     if (idCarga && motorista && quantidadeVolumes > 0) {
       const region = determineTMSRegion(motorista, usuarioCarregamento);
@@ -399,7 +404,7 @@ function updateTMSDeliveryStatus(currentData: DeliveryData[], statusData: any[])
     
     const baixas = parseInt(row.AJ?.toString() || 
                            row['AJ']?.toString() || 
-                           row['baixas']?.toString() || 
+                           row['Baixas']?.toString() || 
                            '0');
     
     console.log(`Dados extraídos - ID: ${idCarga}, Motorista: ${motorista}, Entregues: ${entregues}, Baixas: ${baixas}`);
