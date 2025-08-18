@@ -432,28 +432,42 @@ function updateTMSDeliveryStatus(currentData: DeliveryData[], statusData: any[])
     if (statusEntry) {
       const { entregues, baixas } = statusEntry;
       
-      // Lógica correta:
-      // Entregues = AI
-      // Insucessos = AJ - AI (quando AJ > AI, senão 0)
-      // Pendentes = Total - AJ (o que não foi baixado)
+      // Lógica corrigida conforme especificação:
+      // Entregues = AI (sempre)
+      // Se baixas = entregues: Pendentes = total - baixas, Insucessos = 0
+      // Se baixas > entregues: Entregues = AI, Insucessos = baixas - entregues, Pendentes = total - baixas
       const delivered = entregues;
-      const unsuccessful = Math.max(0, baixas - entregues);
-      const pending = Math.max(0, driver.totalOrders - baixas);
+      let unsuccessful = 0;
+      let pending = 0;
+      
+      if (baixas === entregues) {
+        // Se baixas = entregues: sem insucessos, resto são pendentes
+        unsuccessful = 0;
+        pending = Math.max(0, driver.totalOrders - baixas);
+      } else if (baixas > entregues) {
+        // Se baixas > entregues: insucessos = diferença, pendentes = total - baixas
+        unsuccessful = baixas - entregues;
+        pending = Math.max(0, driver.totalOrders - baixas);
+      } else {
+        // Se baixas < entregues (caso anômalo): sem insucessos, pendentes = total - entregues
+        unsuccessful = 0;
+        pending = Math.max(0, driver.totalOrders - entregues);
+      }
       
       const deliveryPercentage = driver.totalOrders > 0
         ? Math.round((delivered / driver.totalOrders) * 100)
         : 0;
       
       const routePercentage = driver.totalOrders > 0
-        ? Math.round((baixas / driver.totalOrders) * 100)
+        ? Math.round(((delivered + unsuccessful) / driver.totalOrders) * 100)
         : 0;
       
       console.log(`Atualizando ${driver.driver} (ID: ${driver.id}):`);
       console.log(`  Total: ${driver.totalOrders}`);
       console.log(`  Entregues: ${delivered}`);
       console.log(`  Baixas: ${baixas}`);
-      console.log(`  Insucessos: ${unsuccessful} (${baixas} - ${delivered})`);
-      console.log(`  Pendentes: ${pending} (${driver.totalOrders} - ${baixas})`);
+      console.log(`  Insucessos: ${unsuccessful}`);
+      console.log(`  Pendentes: ${pending}`);
       console.log(`  %Entrega: ${deliveryPercentage}%, %Rota: ${routePercentage}%`);
       
       return {
