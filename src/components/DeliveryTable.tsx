@@ -156,15 +156,16 @@ const DeliveryTable: React.FC<DeliveryTableProps> = ({ data }) => {
   const truncateName = (name: string) => name.length > 20 ? `${name.substring(0, 20)}...` : name;
 
   // Função para determinar a cor de fundo da linha baseada na %Entrega
-  const getRowBackgroundColor = (deliveryPercentage: number, index: number) => {
+  const getRowBackgroundColor = (deliveryPercentage: number) => {
     if (deliveryPercentage >= 98) {
-      return 'bg-green-100/80'; // Verde para >= 98%
+      return 'bg-green-400/80'; // Verde para >= 98%
     }
     if (deliveryPercentage >= 91) {
-      return 'bg-yellow-100/80'; // Amarelo para >= 91%
+      return 'bg-yellow-200/80'; // Amarelo para >= 91%
     }
-    return 'bg-red-100/80'; // Vermelho para < 91%
+    return 'bg-red-200/80'; // Vermelho para < 91%
   };
+  
 
   // Função para determinar a cor do texto da %Entrega
   const getDeliveryPercentageTextColor = (percentage: number) => {
@@ -175,16 +176,16 @@ const DeliveryTable: React.FC<DeliveryTableProps> = ({ data }) => {
 
   // Função para determinar a cor de fundo da célula %Rota (independente da %Entrega)
   const getRoutePercentageBackgroundColor = (routePercentage: number) => {
-    if (routePercentage === 100) return 'bg-green-100/80';
+    if (routePercentage === 100) return 'bg-green-400/80';
     if (routePercentage >= 96) return 'bg-yellow-100/80';
-    return 'bg-red-100/80';
+    return 'bg-red-500/90';
   };
 
   // Função para determinar a cor do texto da %Rota (independente da %Entrega)
   const getRoutePercentageTextColor = (routePercentage: number) => {
-    if (routePercentage === 100) return 'text-green-800 font-bold';
+    if (routePercentage === 100) return 'text-green-900 font-bold';
     if (routePercentage >= 96) return 'text-yellow-800 font-bold';
-    return 'text-red-800 font-bold';
+    return 'text-white font-bold';
   };
 
   const getCodeStyle = (code: string, driver: DeliveryData) => {
@@ -242,7 +243,7 @@ const DeliveryTable: React.FC<DeliveryTableProps> = ({ data }) => {
           <tbody>
             {localData.map((row, index) => (
               <React.Fragment key={index}>
-                <tr className={`${getRowBackgroundColor(row.deliveryPercentage, index)} hover:opacity-90 transition-all`}>
+                <tr className={`${getRowBackgroundColor(row.deliveryPercentage)} hover:opacity-90 transition-all`}>
                   <td className="py-2 px-1 text-center border-2 border-black font-medium">
                     <div
                       className="flex items-center justify-center gap-0.5 cursor-pointer"

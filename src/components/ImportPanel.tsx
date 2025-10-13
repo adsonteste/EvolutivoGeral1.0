@@ -60,7 +60,7 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
         const workbook = read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = utils.sheet_to_json<ImportedRow>(worksheet, { header: 'A' });
-        
+
         if (fileType === 'vuupt') {
           setVuuptFile(prev => ({ ...prev, file, fileName: file.name, isUploaded: true }));
           setFirstFileData(jsonData);
@@ -76,13 +76,13 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, fileType: 'vuupt' | 'tms') => {
     e.preventDefault();
-    
+
     if (fileType === 'vuupt') {
       setVuuptFile(prev => ({ ...prev, isDragging: false }));
     } else {
       setTmsFile(prev => ({ ...prev, isDragging: false }));
     }
-    
+
     if (e.dataTransfer.files.length) {
       const file = e.dataTransfer.files[0];
       processExcel(file, fileType);
@@ -104,23 +104,12 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
     }
   };
 
-  const handleSecondFileChoice = (wantsSecondFile: boolean) => {
-    if (wantsSecondFile) {
-      setShowSecondFilePrompt(false);
-      // Usuário quer importar o segundo arquivo, aguarda o upload
-    } else {
-      // Usuário não quer o segundo arquivo, processa apenas o primeiro
-      setShowSecondFilePrompt(false);
-      onFileUpload(firstFileData);
-    }
-  };
-
   const handleProcessFiles = () => {
     // Processa ambos os arquivos se disponíveis
     if (firstFileData.length > 0 && tmsFile.file) {
       // Processa primeiro o arquivo VUUPT
       onFileUpload(firstFileData);
-      
+
       // Depois processa o arquivo TMS
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -159,13 +148,12 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
     description: string;
   }> = ({ fileState, fileType, title, description }) => (
     <div
-      className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center transition-all cursor-pointer ${
-        fileState.isDragging 
-          ? 'border-blue-500 bg-blue-50' 
-          : fileState.isUploaded
+      className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center transition-all cursor-pointer ${fileState.isDragging
+        ? 'border-blue-500 bg-blue-50'
+        : fileState.isUploaded
           ? 'border-green-500 bg-green-50'
           : 'border-gray-300 bg-white hover:border-gray-400'
-      }`}
+        }`}
       onDragOver={(e) => handleDragOver(e, fileType)}
       onDragLeave={() => handleDragLeave(fileType)}
       onDrop={(e) => handleDrop(e, fileType)}
@@ -176,11 +164,11 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
       ) : (
         <FileUp className="w-12 h-12 text-blue-500 mb-4" />
       )}
-      
+
       <h3 className="text-lg font-medium text-gray-700 mb-2">
         {title}
       </h3>
-      
+
       {fileState.fileName ? (
         <p className="text-green-600 font-medium mb-2">{fileState.fileName}</p>
       ) : (
@@ -198,11 +186,10 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
       />
 
       <button
-        className={`px-6 py-2 rounded-md transition-colors flex items-center ${
-          fileState.isUploaded
-            ? 'bg-green-600 hover:bg-black text-white'
-            : 'bg-green-600 hover:bg-black text-white'
-        }`}
+        className={`px-6 py-2 rounded-md transition-colors flex items-center ${fileState.isUploaded
+          ? 'bg-green-600 hover:bg-black text-white'
+          : 'bg-green-600 hover:bg-black text-white'
+          }`}
         onClick={(e) => {
           e.stopPropagation();
           handleButtonClick(fileType);
@@ -216,39 +203,13 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-8">
-     
+
       {showSecondFilePrompt ? (
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full animate-fadeIn">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-            Primeiro arquivo importado com sucesso!
-          </h3>
-          <p className="text-gray-600 mb-6 text-center">
-            Deseja importar o segundo arquivo (TMS)?
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={() => handleSecondFileChoice(true)}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-            >
-              Sim
-            </button>
-            <button
-              onClick={() => handleSecondFileChoice(false)}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-            >
-              Não
-            </button>
-          </div>
+         
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-6xl">
-          <FileUploadArea
-            fileState={vuuptFile}
-            fileType="vuupt"
-            title="Arquivo VUUPT"
-            description="Arraste e solte seu arquivo VUUPT aqui ou clique para selecionar"
-          />
-
+        <div className="grid grid-cols-1 gap-8 w-full max-w-6xl animate-fadeIn">
           <FileUploadArea
             fileState={tmsFile}
             fileType="tms"
@@ -269,18 +230,7 @@ const ImportPanel: React.FC<ImportPanelProps> = ({ onFileUpload }) => {
         </div>
       )}
 
-      <div className="text-center text-sm text-gray-500 max-w-2xl">
-        <p className="mb-2">
-          <strong>Instruções:</strong>
-        </p>
-        <ul className="text-left space-y-1">
-          <li>• Você pode fazer upload apenas do arquivo VUUPT</li>
-          <li>• Você pode fazer upload apenas do arquivo TMS</li>
-          <li>• Ou fazer upload de ambos os arquivos</li>
-          <li>• Se fizer upload do VUUPT primeiro, o sistema perguntará se deseja importar o TMS</li>
-          <li>• Ambos os arquivos devem estar no formato Excel (.xlsx ou .xls)</li>
-        </ul>
-      </div>
+
     </div>
   );
 };
