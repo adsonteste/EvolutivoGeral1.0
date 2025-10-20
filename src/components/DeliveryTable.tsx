@@ -290,16 +290,22 @@ const DeliveryTable: React.FC<DeliveryTableProps> = ({ data }) => {
                               </div>
                               <div className="flex gap-1">
                                 <button
+                                  type="button"
                                   onClick={() => updateDeliveryStatus(row.id, code, 'success')}
                                   className="bg-green-500 hover:bg-green-600 text-white p-1 rounded"
+                                  title="Marcar como entregue"
+                                  aria-label={`Marcar ${code} como entregue`}
                                 >
-                                  <CheckCircle className="w-4 h-4" />
+                                  <CheckCircle className="w-4 h-4" aria-hidden="true" />
                                 </button>
                                 <button
+                                  type="button"
                                   onClick={() => updateDeliveryStatus(row.id, code, 'unsuccessful')}
                                   className="bg-red-500 hover:bg-red-600 text-white p-1 rounded"
+                                  title="Marcar como não entregue"
+                                  aria-label={`Marcar ${code} como não entregue`}
                                 >
-                                  <XCircle className="w-4 h-4" />
+                                  <XCircle className="w-4 h-4" aria-hidden="true" />
                                 </button>
                               </div>
                             </div>

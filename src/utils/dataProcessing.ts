@@ -319,7 +319,7 @@ export function processExcelData(rawData: ImportedRow[]): DeliveryData[] {
   });
 
   // 🔥 Adicione este trecho:
-  const ignoredDrivers = ["Haroldo Rodrigues", "Fulano da Silva"]; // nomes a ignorar
+  const ignoredDrivers = [""]; // nomes a ignorar
 
   return result
     .filter(driver => !ignoredDrivers.some(name =>
