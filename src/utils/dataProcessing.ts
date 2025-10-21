@@ -382,7 +382,8 @@ export function updateDeliveryStatus(currentData: DeliveryData[], statusData: Im
       Object.keys(entry).some(key =>
         key.toLowerCase().includes('carga') ||
         key.toLowerCase().includes('entregues') ||
-        key.toLowerCase().includes('baixas')
+        key.toLowerCase().includes('baixas') ||
+         key.toLowerCase().includes('Baixas')
       );
   });
 
